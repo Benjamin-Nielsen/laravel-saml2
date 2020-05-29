@@ -5,7 +5,9 @@ namespace Aacotroneo\Saml2;
 use OneLogin\Saml2\Auth as OneLogin_Saml2_Auth;
 use OneLogin\Saml2\Error as OneLogin_Saml2_Error;
 use Aacotroneo\Saml2\Events\Saml2LogoutEvent;
-
+use Exception;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Log;
 use Psr\Log\InvalidArgumentException;
 use URL;
@@ -86,6 +88,38 @@ class Saml2Auth
     function getSaml2User()
     {
         return new Saml2User($this->auth);
+    }
+
+    /**
+     * Get not before attribute of the last response.
+     * @return string
+     */
+    function getNotBefore(): string
+    {
+        $notBefore = "";
+        $decryptedXmlResponse = simplexml_load_string($this->auth->getLastResponseXML());
+        try {
+            $notBefore = $decryptedXmlResponse->Assertion->Conditions->attributes()['NotBefore'][0];
+        } catch(Exception $ex) {
+            throw new Exception("Could not get the notBefore attribute from the xml response.");
+        }
+        return $notBefore;
+    }
+
+    /**
+     * Get not on or after attribute of the last response.
+     * @return string
+     */
+    function getNotOnOrAfter(): string
+    {
+        $notOnOrAfter = "";
+        $decryptedXmlResponse = simplexml_load_string($this->auth->getLastResponseXML());
+        try {
+            $notOnOrAfter = $decryptedXmlResponse->Assertion->Conditions->attributes()['NotOnOrAfter'][0];
+        } catch(Exception $ex) {
+            throw new Exception("Could not get the notOnOrAfter attribute from the xml response.");
+        }
+        return $notOnOrAfter;
     }
 
     /**
