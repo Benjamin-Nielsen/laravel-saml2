@@ -168,7 +168,7 @@ class MySaml2Controller extends Saml2Controller
 }
 ```
 
-After login is called, the user will be redirected to the IDP login page. Then the IDP, which you have configured with an endpoint the library serves, will call back, e.g. `/mytestidp1/acs` or `/{routesPrefix}/mytestidp1/acs`. That will process the response and fire an event when ready. The next step for you is to handle that event. You just need to login the user or refuse.
+After login is called, the user will be redirected to the IDP login page. Then the IDP, which you have configured with an endpoint the library serves, will call back, e.g. `/mytestidp1/acs` or `/{routesPrefix}/mytestidp1/acs`. That will process the response and fire an event when ready. The next step for you is to handle that event. You just need to login the user or refuse. If you are working with the Nem Id setup, you might want to fullfill the requirement of denying a login attempt if the conditions attached to the response are not met. The conditions in a Nem response will be NotBefore and notOnOrAfter. Use the getters on the samlAuth object from the response to assert that the time is between those two timestamps. An example is included in the login event example.
 
 For example, it can be:
 
@@ -177,6 +177,12 @@ For example, it can be:
 Event::listen('Aacotroneo\Saml2\Events\Saml2LoginEvent', function (Saml2LoginEvent $event) {
     $messageId = $event->getSaml2Auth()->getLastMessageId();
     // Add your own code preventing reuse of a $messageId to stop replay attacks
+
+    $notOnOrAfter = Carbon::parse($event->getSaml2Auth()->getNotOnOrAfter());
+    $notBefore = Carbon::parse($event->getSaml2Auth()->getNotBefore());
+    if(Carbon::now()->lt($notBefore) || Carbon::now()->gte($notOnOrAfter)) {
+        abort(redirect()->route('some-error-route'));
+    }
 
     $user = $event->getSaml2User();
     $userData = [
