@@ -1,8 +1,8 @@
 {
-    "name": "Benjamin-Nielsen/laravel-saml2",
-    "description": "A Laravel package for Saml2 integration as a SP (service provider) based on  https://github.com/onelogin/php-saml toolkit, which is much lighter and easier to install than simplesamlphp SP. It doesn't need separate routes or session storage to work! This fork of the original project has some added functionality to make it possible to fullfill the requirements of a Nem Login setup(danish public authentication service).",
+    "name": "aacotroneo/laravel-saml2",
+    "description": "A Laravel package for Saml2 integration as a SP (service provider) for multiple IdPs, based on OneLogin toolkit which is much more lightweight than simplesamlphp.",
     "keywords": ["laravel","saml", "saml2", "onelogin", "nemlogin"],
-    "homepage": "https://github.com/Benjamin-Nielsen/laravel-saml2",
+    "homepage": "https://github.com/aacotroneo/laravel-saml2",
     "license": "MIT",
     "version": "2.1.0",
     "authors": [
@@ -13,10 +13,6 @@
         {
             "name": "Niraj Patkar",
             "email": "niraj@alphonso.in"
-        },
-        {
-            "name": "Benjamin-Nielsen",
-            "email": "kontakt@benjamin-bjorn-consulting.dk"
         }
     ],
     "require": {
