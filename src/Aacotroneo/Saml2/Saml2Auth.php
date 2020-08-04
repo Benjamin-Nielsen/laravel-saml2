@@ -26,7 +26,7 @@ class Saml2Auth
     {
         $this->auth = $auth;
     }
-
+    
     /**
      * Load the IDP config file and construct a OneLogin\Saml2\Auth (aliased here as OneLogin_Saml2_Auth).
      * Pass the returned value to the Saml2Auth constructor.
@@ -122,6 +122,15 @@ class Saml2Auth
         return $notOnOrAfter;
     }
 
+    /**
+     * Will get the last decrypted saml response xml.
+     * Needed to be able to get alternate attributes from the saml response.
+     */
+    function getDecryptedXmlResponse(): string
+    {
+        return simplexml_load_string($this->auth->getLastResponseXML());
+    }
+    
     /**
      * The ID of the last message processed
      * @return String
