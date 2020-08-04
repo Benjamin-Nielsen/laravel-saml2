@@ -126,7 +126,7 @@ class Saml2Auth
      * Will get the last decrypted saml response xml.
      * Needed to be able to get alternate attributes from the saml response.
      */
-    function getDecryptedXmlResponse(): string
+    function getDecryptedXmlResponse()
     {
         return simplexml_load_string($this->auth->getLastResponseXML());
     }
