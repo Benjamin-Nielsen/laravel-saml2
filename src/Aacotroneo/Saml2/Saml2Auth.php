@@ -130,6 +130,30 @@ class Saml2Auth
     {
         return simplexml_load_string($this->auth->getLastResponseXML());
     }
+
+    public function getIssuer(): string
+    {
+        $issuer = "";
+        $decryptedXmlResponse = simplexml_load_string($this->auth->getLastResponseXML());
+        try {
+            $issuer = $decryptedXmlResponse->Issuer;
+        } catch(Exception $ex) {
+            throw new Exception("Could not get the issuer attribute from the xml response.");
+        }
+        return $issuer;
+    }
+
+    public function getInResponseTo(): string
+    {
+        $inResponseTo = "";
+        $decryptedXmlResponse = simplexml_load_string($this->auth->getLastResponseXML());
+        try {
+            $inResponseTo = $decryptedXmlResponse->attributes()['InResponseTo'][0];
+        } catch(Exception $ex) {
+            throw new Exception("Could not get the inResponseTo attribute from the xml response.");
+        }
+        return $inResponseTo;
+    }
     
     /**
      * The ID of the last message processed
