@@ -90,6 +90,37 @@ class Saml2Auth
         return new Saml2User($this->auth);
     }
 
+
+    /**
+     * Get the ID of the assertion of the last response.
+     * @return assertionId
+     */
+    function getAssertionId()
+    {
+        $assertionId = "";
+        $decryptedXmlResponse = simplexml_load_string($this->auth->getLastResponseXML());
+        try {
+            $assertionId = $decryptedXmlResponse->Assertion->attributes()['ID'][0];
+        } catch(Exception $ex) {
+            throw new Exception("Could not get the assertionId attribute from the xml response.");
+        }
+        return $assertionId;
+    }
+
+    /**
+     * Get the validation result of the last response.
+     * @return String validationResult the validation result of the last response.
+     */
+    public function getAssertionValidationResponse(): string
+    {
+        $isAuthenticated = $this->auth->isAuthenticated();
+        if($isAuthenticated) {
+            return "Response validated successfully.";
+        } else {
+            return "Response invalid, with error: " . $this->auth->getLastErrorReason();
+        }
+    } 
+
     /**
      * Get not before attribute of the last response.
      * @return string
