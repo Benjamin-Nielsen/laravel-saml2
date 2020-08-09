@@ -125,7 +125,7 @@ class Saml2Auth
         $signature = "";
         $decryptedXmlResponse = simplexml_load_string($this->auth->getLastResponseXML());
         try {
-            $signature = $decryptedXmlResponse->Assertion->Signature->SignatureValue;
+            $signature = json_decode(json_encode($decryptedXmlResponse->Assertion->Signature->SignatureValue), true)[0];
         } catch (Exception $ex) {
             throw new Exception("Could not get the signature attribute from the xml response.");
         }
